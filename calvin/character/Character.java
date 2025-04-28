@@ -1,4 +1,4 @@
-package uts.character;
+package calvin.character;
 
 class Character {
     protected int HP, attack, defense;
