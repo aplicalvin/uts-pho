@@ -1,42 +1,43 @@
 package calvin.enemy;
 import calvin.character.Character;
 
-class Enemy extend Character {
+public class Enemy extends Character {
     protected int harapan;
     protected int reputasi; // mendeteksi HP lawan
 
-
-    Enemy(String nama, int HP, int harapan) {
-        this.nama = nama;
-        this.HP = HP;
+    // Konstruktor 1
+    public Enemy(String name, int HP, int harapan) {
+        super(name, HP); // Memanggil konstruktor parent
         this.harapan = harapan;
     }
 
-    Enemy(String nama) {
-        this.nama = nama;
-        this.HP = 120;
+    // Konstruktor 2
+    public Enemy(String name) {
+        super(name); // Memanggil konstruktor parent
+        this.HP = 120; // Override nilai HP default dari Character
         this.harapan = 150;
     }
     
-    Enemy() {
-        this.nama = "Ririn";
-        this.HP = 120;
+    // Konstruktor 3
+    public Enemy() {
+        super(); // Memanggil konstruktor default parent
+        this.name = "Ririn"; // Override nilai name default dari Character
+        this.HP = 120; // Override nilai HP default dari Character
         this.harapan = 150;
     }
 
     @Override
     public void stepSuccess(int tambahan) {
-        if ( reputasi > 20 ) {
-            int tambahGengsi = tambahan * 1.5;
+        if (reputasi > 20) {
+            int tambahGengsi = tambahan * 2;
             this.HP += tambahan; 
+        } else {
+            this.HP += tambahan;
         }
-
-        this.HP += tambahan;
     }
 
+    @Override
     public boolean statusHP() {
         return this.HP > 0;
     }
-    
-    
 }

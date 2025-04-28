@@ -1,12 +1,22 @@
 package calvin.quiz;
-import calvin.character;
-import calvin.enemy;
+import calvin.character.Character;
+import calvin.enemy.Enemy;
 
-class Quiz {
-    protected boolean statusGame;
+public class Quiz {
+    private Character player;
+    private Enemy enemy;
+    private boolean statusGame;
+
+    // Constructor
+    public Quiz(Character player, Enemy enemy) {
+        this.player = player;
+        this.enemy = enemy;
+        this.statusGame = true;
+    }
+
 
     // Pertanyaan
-    private String[] question = {
+    private String[] questions = {
         "Di kantin kampus, Lina meminta izin duduk di sebelahmu. Apa responsmu?",
         "Lina lupa membawa laptop ke kelas. Apa yang kamu lakukan?",
         "Temanmu menyebarkan gosip bahwa kamu stalker IG Lina. Reaksimu?",
@@ -59,35 +69,69 @@ class Quiz {
     };
 
     // Kunci jawaban (indeks jawaban betul/gantung/salah untuk setiap soal)
-    private int[] jawabanBetul = {0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0}; // Index jawaban benar
-    private int[] jawabanGantung = {1, 0, 1, 1, 2, 1, 0, 1, 1, 1, 2, 1, 1, 2, 1}; // Index jawaban gantung
-    private int[] jawabanSalah = {2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2};  // Index jawaban salah
+    private int[] correctAnswers  = {0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0}; // Index jawaban benar
+    private int[] neutralAnswers  = {1, 0, 1, 1, 2, 1, 0, 1, 1, 1, 2, 1, 1, 2, 1}; // Index jawaban gantung
+    private int[] wrongAnswers  = {2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2};  // Index jawaban salah
 
 
-    // Mekanisme looping soal
+     // Method untuk menampilkan pertanyaan
     public void displayQuestion(int questionIndex) {
-        System.out.println("Pertanyaan ke-" + questionIndex);
-        System.out.println(question[questionIndex]);
-
-        for (int i = 0; i < 3; i++) {
-            System.out.println(options[questionIndex][i]);
+        if (questionIndex < 0 || questionIndex >= questions.length) {
+            System.out.println("Pertanyaan tidak tersedia!");
+            return;
+        }
+        
+        System.out.println("\nPertanyaan " + (questionIndex + 1) + "/" + questions.length);
+        System.out.println(questions[questionIndex]);
+        
+        for (int i = 0; i < options[questionIndex].length; i++) {
+            System.out.println((i + 1) + ". " + options[questionIndex][i]);
         }
     }
 
-    // Mekanisme cek jawaban
+    // Method untuk cek jawaban
     public void checkAnswer(int questionIndex, int playerChoice) {
-        if (playerChoice == jawabanBetul[questionIndex]) {
-            System.out.println("Benar! +Reputasi");
-            player.tambahReputasi(3);
+        if (questionIndex < 0 || questionIndex >= questions.length) return;
+        
+        // Validasi input
+        if (playerChoice < 1 || playerChoice > 3) {
+            System.out.println("Pilihan tidak valid!");
+            return;
+        }
+
+        int choiceIndex = playerChoice - 1; // Konversi ke 0-based index
+        
+        if (choiceIndex == correctAnswers[questionIndex]) {
+            System.out.println("Benar! +5 Reputasi");
+            player.stepSuccess(5);
+            enemy.stepFailed(17);
         } 
-        else if (playerChoice == jawabanGantung[questionIndex]) {
-            System.out.println("Netral. +Sedikit Reputasi");
-            player.tambahReputasi(1);
+        else if (choiceIndex == neutralAnswers[questionIndex]) {
+            System.out.println("Gantung anjir. -10 Reputasi");
+            player.stepFailed(8);
+            enemy.stepSuccess(3);
         } 
         else {
-            System.out.println("Salah! -Reputasi");
-            player.kurangReputasi(2);
+            System.out.println("Salah! -20 Reputasi");
+            player.stepFailed(19);
+            enemy.stepSuccess(6);
+
+        }
+        
+        // Update status game
+        if (!player.statusHP()) {
+            statusGame = false;
+            System.out.println("Game Over! Reputasi Anda habis.");
         }
     }
-        
+    
+    // Getter untuk status game
+    public boolean isGameActive() {
+        return statusGame;
+    }
+    
+    // Getter jumlah pertanyaan
+    public int getTotalQuestions() {
+        return questions.length;
+    }
 }

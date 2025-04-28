@@ -1,32 +1,32 @@
 package calvin.character;
 
-class Character {
+public class Character {
     // Initialisasi attribut
     protected int HP;
     protected String name;
     
     // Set Constructor
-    Character(String nama, int HP) {
+    public Character(String name, int HP) {
         this.name = name;
         this.HP = HP;
     }
 
-    Character(String nama) {
+    public Character(String name) {
         this.name = name;
         this.HP = 100;
     }
 
-    Character() {
+    public Character() {
         this.name = "Aldi";
         this.HP = 100;
     }
 
     // dalam Game, HP adalah Reputasi
-    public void getHP() {
-        System.out.println("Reputasi anda : " + this.hp);
+    public void showHP() {
+        System.out.println("Reputasi anda : " + this.HP);
     }
 
-    public void getName() {
+    public void showNama() {
         System.out.println("Nama anda : " + this.name);
     }
 
@@ -43,5 +43,13 @@ class Character {
     // Untuk cek apakah HP masih ada atau tidak
     public boolean statusHP() {
         return this.HP > 0;
+    }
+
+    public String getNama() {
+        return this.name;
+    }
+
+    public int getHP() {
+        return this.HP;
     }
 }
