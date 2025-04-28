@@ -6,42 +6,42 @@ class Character {
     protected String name;
     
     // Set Constructor
-    void Character(String nama, int HP) {
+    Character(String nama, int HP) {
         this.name = name;
         this.HP = HP;
     }
 
-    void Character(String nama) {
+    Character(String nama) {
         this.name = name;
         this.HP = 100;
     }
 
-    void Character() {
+    Character() {
         this.name = "Aldi";
         this.HP = 100;
     }
 
     // dalam Game, HP adalah Reputasi
-    void getHP() {
+    public void getHP() {
         System.out.println("Reputasi anda : " + this.hp);
     }
 
-    void getName() {
+    public void getName() {
         System.out.println("Nama anda : " + this.name);
     }
 
     // Mekanisme tambah HP 
-    void tambahinHp(int tambahan) {
+    public void stepSuccess(int tambahan) {
         this.HP += tambahan;
     }
 
     // Menakisme kurangi HP 
-    void kuranginHP(int kurangin) {
+    public void stepFailed(int kurangin) {
         this.HP -= kurangin;
     }
 
     // Untuk cek apakah HP masih ada atau tidak
-    boolean statusHP() {
+    public boolean statusHP() {
         return this.HP > 0;
     }
 }
