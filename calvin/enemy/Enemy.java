@@ -40,4 +40,8 @@ public class Enemy extends Character {
     public boolean statusHP() {
         return this.HP > 0;
     }
+
+    public int getHarapan() {
+        return this.harapan;
+    }
 }

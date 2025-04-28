@@ -6,6 +6,7 @@ public class Quiz {
     private Character player;
     private Enemy enemy;
     private boolean statusGame;
+    private int surpriseCount = 3;
 
     // Constructor
     public Quiz(Character player, Enemy enemy) {
@@ -17,20 +18,20 @@ public class Quiz {
 
     // Pertanyaan
     private String[] questions = {
-        "Di kantin kampus, Lina meminta izin duduk di sebelahmu. Apa responsmu?",
-        "Lina lupa membawa laptop ke kelas. Apa yang kamu lakukan?",
-        "Temanmu menyebarkan gosip bahwa kamu stalker IG Lina. Reaksimu?",
-        "Lina posting story sedang bad mood. Apa tindakanmu?",
-        "Kamu melihat Tono (rival) memberi hadiah ke Lina. Strategimu?",
-        "Lina mengajakmu study bersama di perpustakaan. Persiapanmu?",
-        "Di kafe, Lina bertanya 'Kamu sering perhatian banget ya ke aku?'. Jawabanmu?",
-        "Kamu dapat info Lina suka novel romantis. Tindakanmu?",
-        "Event kampus: Kamu menang lomba coding dan Lina hadir. Sikapmu?",
-        "Lina tiba-tiba tidak membalas chat 3 hari. Apa yang kamu lakukan?",
-        "Tono menghasut bahwa kamu hanya mendekati Lina karena ingin populer. Balasanmu?",
-        "Hujan deras saat pulang kampus. Lina tidak bawa payung. Aksi kamu?",
-        "Kamu menemukan Lina menangis di taman kampus. Pendekatanmu?",
-        "Saat confession, Lina bertanya 'Kenapa kamu suka aku?'. Jawaban terbaikmu?",
+        "Di kantin kampus, Dia meminta izin duduk di sebelahmu. Apa responsmu?",
+        "Dia lupa membawa laptop ke kelas. Apa yang kamu lakukan?",
+        "Temanmu menyebarkan gosip bahwa kamu stalker IG Dia. Reaksimu?",
+        "Dia posting story sedang bad mood. Apa tindakanmu?",
+        "Kamu melihat Tono (rival) memberi hadiah ke Dia. Strategimu?",
+        "Dia mengajakmu study bersama di perpustakaan. Persiapanmu?",
+        "Di kafe, Dia bertanya 'Kamu sering perhatian banget ya ke aku?'. Jawabanmu?",
+        "Kamu dapat info Dia suka novel romantis. Tindakanmu?",
+        "Event kampus: Kamu menang lomba coding dan Dia hadir. Sikapmu?",
+        "Dia tiba-tiba tidak membalas chat 3 hari. Apa yang kamu lakukan?",
+        "Tono menghasut bahwa kamu hanya mendekati Dia karena ingin populer. Balasanmu?",
+        "Hujan deras saat pulang kampus. Dia tidak bawa payung. Aksi kamu?",
+        "Kamu menemukan Dia menangis di taman kampus. Pendekatanmu?",
+        "Saat confession, Dia bertanya 'Kenapa kamu suka aku?'. Jawaban terbaikmu?",
         "Setelah ditolak, temanmu mengolok-olokmu. Reaksimu?"
     };
 
@@ -47,7 +48,7 @@ public class Quiz {
         // Soal 5
         {"Tunjukkan keahlianmu yang lebih unik", "Ikut memberi hadiah lebih mewah", "Acuh tak acuh"},
         // Soal 6
-        {"Bawa buku favorit Lina dan snack", "Datang tepat waktu saja", "Batal dengan alasan sibuk"},
+        {"Bawa buku favorit Dia dan snack", "Datang tepat waktu saja", "Batal dengan alasan sibuk"},
         // Soal 7
         {"Aku cuma ingin berteman baik", "Iya, soalnya aku suka sama kamu", "Haha, iya ya? Nggak sengaja"},
         // Soal 8
@@ -57,7 +58,7 @@ public class Quiz {
         // Soal 10
         {"Tunggu saja sampai dia membalas", "Kirim pesan 'Aku khawatir'", "Spam chat tanya kenapa"},
         // Soal 11
-        {"Tunjukkan bukti ketulusanmu ke Lina", "Tantang Tono berdebat", "Diam saja"},
+        {"Tunjukkan bukti ketulusanmu ke Dia", "Tantang Tono berdebat", "Diam saja"},
         // Soal 12
         {"Tawarkan payung dan berteduh bersama", "Pinjamkan payung lalu pulang", "Pura-pura tidak melihat"},
         // Soal 13
@@ -81,24 +82,44 @@ public class Quiz {
             return;
         }
         
-        System.out.println("\nPertanyaan " + (questionIndex + 1) + "/" + questions.length);
+        System.out.println("\n================================================ ");
+        System.out.println("> Pertanyaan [ " + (questionIndex + 1) + "/" + questions.length + " ] ");
+        System.out.println("================================================ ");
         System.out.println(questions[questionIndex]);
         
+        // Tampilkan opsi normal (1-3)
         for (int i = 0; i < options[questionIndex].length; i++) {
             System.out.println((i + 1) + ". " + options[questionIndex][i]);
         }
+        
+        // Tampilkan opsi tambahan (4-5)
+        if (questionIndex > 4) {
+            System.out.println("4. Berikan Surprise" + (surpriseCount > 0 ? " (" + surpriseCount + "x tersisa)" : " (Habis)"));
+        }
+        System.out.println("5. Menyerah/Keluar");
     }
+
 
     // Method untuk cek jawaban
     public void checkAnswer(int questionIndex, int playerChoice) {
-        if (questionIndex < 0 || questionIndex >= questions.length) return;
+        if (questionIndex > 4 ) {
+            if (playerChoice == 4) { // Opsi Surprise
+                if (surpriseCount > 0) {
+                    System.out.println("Kamu memberikan kejutan manis! +20 Reputasi");
+                    player.stepSuccess(20);
+                    surpriseCount--;
+                } else {
+                    System.out.println("Kesempatan memberikan surprise sudah habis!");
+                }
+                return;
+            }
+        }
         
-        // Validasi input
-        if (playerChoice < 1 || playerChoice > 3) {
-            System.out.println("Pilihan tidak valid!");
+        if (playerChoice == 5) { // Opsi Menyerah
+            System.out.println("Kamu memilih menyerah. Permainan berakhir.");
+            statusGame = false;
             return;
         }
-
         int choiceIndex = playerChoice - 1; // Konversi ke 0-based index
         
         if (choiceIndex == correctAnswers[questionIndex]) {
@@ -118,11 +139,27 @@ public class Quiz {
 
         }
         
+        // ============== GAME OVER KARNA KEJADIAN KHUSUS ===============
         // Update status game
         if (!player.statusHP()) {
             statusGame = false;
             System.out.println("Game Over! Reputasi Anda habis.");
         }
+
+        if (player.getHP() >= enemy.getHarapan()) {
+            statusGame = false;
+            System.out.println("================================================ ");
+            System.out.println(">           ! ! !      BOOOM     ! ! !           ");
+            System.out.println("================================================ ");
+            System.out.println("Kamu sesuai dengan harapan dia, Dia sangat menyukaimu!");
+            System.out.println("Permainan berakhir, Super Duper Good Ending!");
+            System.out.println("================================================ ");
+        }
+    }
+
+    // Tambahkan getter untuk surprise count
+    public int getSurpriseCount() {
+        return surpriseCount;
     }
     
     // Getter untuk status game
