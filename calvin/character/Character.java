@@ -7,8 +7,18 @@ class Character {
     
     // Set Constructor
     void Character(String nama, int HP) {
-        this.HP = HP;
         this.name = name;
+        this.HP = HP;
+    }
+
+    void Character(String nama) {
+        this.name = name;
+        this.HP = 100;
+    }
+
+    void Character() {
+        this.name = "Aldi";
+        this.HP = 100;
     }
 
     // dalam Game, HP adalah Reputasi
