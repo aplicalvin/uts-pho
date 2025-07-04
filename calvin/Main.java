@@ -1,130 +1,116 @@
 package calvin;
+
 import java.util.Scanner;
-import calvin.character.Character;
+import calvin.character.Player;
 import calvin.enemy.Enemy;
 import calvin.quiz.Quiz;
 
 class Main {
     public static void main(String[] args) {
         Scanner masukan = new Scanner(System.in);
-        boolean lanjutganih;
+        boolean lanjutMain;
 
         do {
-            
-            // ===== INISIALISASI CHARACTER =====
             System.out.println("================================================ ");
             System.out.println("> \"Heart's Quest: Pursuit of Love \" ");
             System.out.println("================================================ ");
-            System.out.println("Game ini merupakan simulasi ketika kamu mendekati seorang perempuan. Dapatkah kamu menurunkan gengsinya dan mendapatkan hatinya dengan reputasimu?");
-            System.out.println("Good Luck and Enjoy the game! \n");
-            System.out.print("Masukkan nama kamu : ");
+            System.out.println("Game ini adalah simulasi pendekatan (PDKT).");
+            System.out.println("Setiap jawaban akan mempengaruhi reputasimu dan gengsi dia.");
+            System.out.println("Good Luck!\n");
+
+            System.out.print("Masukkan nama kamu: ");
             String namaPlayer = masukan.nextLine();
-            Character player = new Character(namaPlayer);
+            Player player = new Player(namaPlayer);
 
-            System.out.print("Masukkan nama pacar kamu : ");
-            String namaPacar = masukan.nextLine();
-            Enemy pacar = new Enemy(namaPacar);
+            System.out.print("Masukkan nama gebetan kamu: ");
+            String namaGebetan = masukan.nextLine();
+            Enemy gebetan = new Enemy(namaGebetan);
 
-            System.out.println("\n=== PROFIL ===");
-            System.out.println("Kamu: " + player.getNama() + " | Reputasi: " + player.getHP());
-            System.out.println("Pacar: " + pacar.getNama() + " | Gengsi  : " + pacar.getHP() + "\n");
-
-            // ===== INISIALISASI QUIZ =====
-            Quiz datingQuiz = new Quiz(player, pacar);
+            System.out.println("\n=== PROFIL AWAL ===");
+            player.displayStatus();
+            gebetan.displayStatus();
+            System.out.println("Target Harapan Dia: " + gebetan.getHarapan() + "\n");
             
-            // ===== MEKANISME GAME LOOP =====
-            System.out.println("================================================ ");
-            System.out.println(">              Mulai Permainan                  |");
-            System.out.println("================================================ ");
-            System.out.println("Setiap jawaban akan mempengaruhi reputasimu dan gengsi dia!");
-            System.out.println("Pilih jawaban (1-5) untuk menjawab.\n");
+            System.out.println("Tekan Enter untuk memulai permainan...");
+            masukan.nextLine();
+
+            Quiz datingQuiz = new Quiz(player, gebetan);
 
             for (int i = 0; i < datingQuiz.getTotalQuestions(); i++) {
-                // Tampilkan pertanyaan
                 datingQuiz.displayQuestion(i);
-                
-                // Input jawaban dengan validasi
+
                 int pilihan = 0;
-                while (pilihan < 1 || pilihan > 5) { // Diubah dari 3 ke 5
-                    System.out.println("================================================ ");
+                while (true) {
+                    System.out.println("------------------------------------------------ ");
                     System.out.print("> Pilihanmu (1-5): ");
                     try {
                         pilihan = Integer.parseInt(masukan.nextLine());
-                        if (pilihan < 1 || pilihan > 5) { // Diubah dari 3 ke 5
-                            System.out.println("Masukkan angka 1-5 saja!");
+                        if (pilihan >= 1 && pilihan <= 5) {
+                            // Validasi khusus untuk opsi 'surprise'
+                            if (pilihan == 4 && i <= 4) {
+                                System.out.println("Opsi 'Surprise' baru tersedia setelah pertanyaan ke-5!");
+                                continue; // Minta input lagi
+                            }
+                            break; // Input valid, keluar dari loop
+                        } else {
+                            System.out.println("Masukkan hanya angka 1-5!");
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("Input harus angka!");
+                        System.out.println("Input tidak valid, masukkan angka saja!");
                     }
-                    System.out.println("================================================ ");
                 }
-                
-                // Proses jawaban
+
                 datingQuiz.checkAnswer(i, pilihan);
-                
-                // Tampilkan update reputasi dan gengsi 
-                System.out.println("================================================ ");
-                System.out.println("Reputasi sekarang: " + player.getHP());
-                System.out.println("Gengsi dia sekarang: " + pacar.getHP());
-                System.out.println("================================================ ");
-                
-                // Cek game over
-                if (!datingQuiz.isGameActive() || pilihan == 5) {
-                    System.out.println("================================================ ");
-                    System.out.println(">             Permainan Berakhir               |");
-                    System.out.println("================================================ ");
+
+                if (!datingQuiz.isGameActive()) {
                     break;
                 }
-                
-                // Jeda sebelum pertanyaan berikutnya
+
+                System.out.println("\n--- STATUS TERBARU ---");
+                player.displayStatus();
+                gebetan.displayStatus();
+                System.out.println("----------------------");
+
                 if (i < datingQuiz.getTotalQuestions() - 1) {
-                    System.out.println("Tekan Enter untuk lanjut...");
+                    System.out.println("\nTekan Enter untuk lanjut ke pertanyaan berikutnya...");
                     masukan.nextLine();
                 }
             }
 
-            // ===== AKHIR GAME =====
-            if (datingQuiz.isGameActive()) {
-                System.out.println("\n\n");
-                System.out.println("================================================ ");
-                System.out.println(">            S  E  L  A  M  A  T               |");
-                System.out.println("================================================ ");
+            // HASIL AKHIR PERMAINAN
+            System.out.println("\n================================================ ");
+            System.out.println(">               PERMAINAN SELESAI              ");
+            System.out.println("================================================ ");
+            System.out.println("Reputasi akhir kamu: " + player.getHP());
+            System.out.println("Gengsi akhir dia: " + gebetan.getHP());
+            System.out.println("------------------------------------------------ ");
 
-                if (player.getHP() >= pacar.getHarapan()) {
-                    System.out.println("Kamu mendapat super duper good ending");
-                } else {
-                    System.out.println("Kamu berhasil menyelesaikan semua tantangan!");
-                }
-                System.out.println("================================================ ");
-                System.out.println("Reputasi akhir: " + player.getHP());
-                System.out.println("Gengsi si dia akhir: " + pacar.getHP());
-                System.out.println("================================================ ");
-                
-                // Berdasarkan reputasi akhir
-                if (player.getHP() >= pacar.getHarapan()) {
-                    System.out.println("Hasil: " + pacar.getNama() + " suka banget sama kamu!!! ayo tembak sekarang!");
-                } else if (player.getHP() >= 50 && pacar.getHP() <=25) {
-                    System.out.println("Hasil: " + pacar.getNama() + " nyaman dengan kamu dan siap menjadi pacar kamu!");
-                } else if (player.getHP() >= 50 && pacar.getHP() <=50) {
-                    System.out.println("Hasil: " + pacar.getNama() + " dan kamu menjalani HTS :)");
-                } else if (player.getHP() >= 0 && pacar.getHP() <=50) {
-                    System.out.println("Hasil: " + pacar.getNama() + " dan kamu lebih baik berteman saja");
-                } else {
-                    System.out.println("Hasil: " + pacar.getNama() + " tidak tertarik padamu.");
-                }
-                System.out.println("================================================ ");
+            if (player.getHP() >= gebetan.getHarapan()) {
+                System.out.println("HASIL: PERFECT ENDING! Dia melihatmu sebagai pasangan ideal!");
+            } else if (player.getHP() >= 100 && gebetan.getHP() <= 50) {
+                System.out.println("HASIL: GOOD ENDING! Dia sangat tertarik padamu. Ayo tembak!");
+            } else if (player.getHP() >= 75) {
+                System.out.println("HASIL: HTS ENDING! Hubungan Tanpa Status. Ada chemistry, tapi butuh kepastian.");
+            } else if (player.getHP() >= 50) {
+                System.out.println("HASIL: FRIENDZONE! Dia nyaman, tapi hanya sebagai teman.");
+            } else {
+                System.out.println("HASIL: BAD ENDING! Kamu lebih baik move on.");
+            }
+            System.out.println("================================================ ");
 
+            System.out.print("\nApakah kamu ingin mencoba lagi? (true/false): ");
+            while (true) {
+                try {
+                    lanjutMain = Boolean.parseBoolean(masukan.nextLine());
+                    break;
+                } catch (Exception e) {
+                    System.out.print("Input tidak valid. Masukkan 'true' atau 'false': ");
+                }
             }
 
+        } while (lanjutMain);
 
-            // ========================= MEKANISME LOOPING =======================
-            System.out.println("\n\n");
-            System.out.println("================================================ ");
-            System.out.print("Lanjutkan? (True / False): ");
-            lanjutganih = masukan.nextBoolean();
-            System.out.println("================================================ ");
-            System.out.println("\n\n\n");
-        } while (lanjutganih);
-        
+        System.out.println("\nTerima kasih sudah bermain!");
+        masukan.close();
     }
 }

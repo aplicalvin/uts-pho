@@ -1,46 +1,34 @@
+// File: calvin/character/Character.java
 package calvin.character;
 
-public class Character {
-    // Initialisasi attribut
+// 1. Menjadi ABSTRACT class dan meng-IMPLEMENTS interface Aksi
+public abstract class Character implements Aksi {
     protected int HP;
     protected String name;
-    
-    // Set Constructor
+
+    // Constructor tetap sama
     public Character(String name, int HP) {
         this.name = name;
         this.HP = HP;
     }
-
-    public Character(String name) {
-        this.name = name;
-        this.HP = 100;
-    }
-
-    public Character() {
-        this.name = "Aldi";
-        this.HP = 100;
-    }
-
-    // dalam Game, HP adalah Reputasi
-    public void showHP() {
-        System.out.println("Reputasi anda : " + this.HP);
-    }
-
-    public void showNama() {
-        System.out.println("Nama anda : " + this.name);
-    }
-
-    // Mekanisme tambah HP 
-    public void stepSuccess(int tambahan) {
+    
+    // 2. Implementasi default dari interface Aksi
+    // Metode ini bisa di-override oleh subclass jika butuh perilaku khusus.
+    @Override
+    public void aksiBerhasil(int tambahan) {
         this.HP += tambahan;
     }
 
-    // Menakisme kurangi HP 
-    public void stepFailed(int kurangin) {
+    @Override
+    public void aksiGagal(int kurangin) {
         this.HP -= kurangin;
     }
 
-    // Untuk cek apakah HP masih ada atau tidak
+    // 3. Menambahkan ABSTRACT METHOD
+    // Setiap subclass WAJIB memberikan implementasi unik untuk metode ini.
+    public abstract void displayStatus();
+
+    // Getter dan metode lainnya tetap sama
     public boolean statusHP() {
         return this.HP > 0;
     }
