@@ -86,6 +86,7 @@ public class Quiz {
         System.out.println("> Pertanyaan [ " + (questionIndex + 1) + "/" + questions.length + " ] ");
         System.out.println("================================================ ");
         System.out.println(questions[questionIndex]);
+        System.out.println("------------------------------------------------ ");
         
         // Tampilkan opsi normal (1-3)
         for (int i = 0; i < options[questionIndex].length; i++) {
@@ -128,16 +129,16 @@ public class Quiz {
             enemy.stepFailed(17);
         } 
         else if (choiceIndex == neutralAnswers[questionIndex]) {
-            System.out.println("Gantung anjir. -10 Reputasi");
+            System.out.println("Gantung anjir. -8 Reputasi");
             player.stepFailed(8);
             enemy.stepSuccess(3);
         } 
         else {
-            System.out.println("Salah! -20 Reputasi");
+            System.out.println("Salah! -19 Reputasi");
             player.stepFailed(19);
             enemy.stepSuccess(6);
 
-        }
+        } 
         
         // ============== GAME OVER KARNA KEJADIAN KHUSUS ===============
         // Update status game
